@@ -1,13 +1,19 @@
-package com.friendship41.cycledairyserver.data;
+package com.friendship41.cycledairyserver.data.database;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "cycle_member")
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class CycleMember {
   @Id
   private String memberId;
