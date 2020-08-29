@@ -12,9 +12,15 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
+  private final ReqResLoggingInterceptor reqResLoggingInterceptor;
+  private final AuthInterceptor authInterceptor;
 
   @Autowired
-  private ReqResLoggingInterceptor reqResLoggingInterceptor;
+  public WebMvcConfig(final ReqResLoggingInterceptor reqResLoggingInterceptor,
+      final AuthInterceptor authInterceptor) {
+    this.reqResLoggingInterceptor = reqResLoggingInterceptor;
+    this.authInterceptor = authInterceptor;
+  }
 
   @Override
   public void configureMessageConverters(final List<HttpMessageConverter<?>> converters) {
@@ -31,5 +37,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
         .addInterceptor(this.reqResLoggingInterceptor)
         .addPathPatterns("/**")
         .excludePathPatterns("/error");
+    registry
+        .addInterceptor(this.authInterceptor)
+        .addPathPatterns("/**")
+        .excludePathPatterns("/member/register", "/member/login","/error");
   }
 }

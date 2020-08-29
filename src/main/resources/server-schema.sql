@@ -1,11 +1,13 @@
-create table cycle_member
+create table cycle_dairy_db.cycle_member
 (
-    MEMBER_ID varchar(100) not null
-        primary key,
-    PASSWORD varchar(100) not null,
-    EMAIL varchar(100) not null,
-    constraint CYCLE_MEMBER_EMAIL_uindex
-        unique (EMAIL)
+	MEMBER_ID varchar(100) not null
+		primary key,
+	PASSWORD varchar(100) not null,
+	EMAIL varchar(100) not null,
+	REGISTER_DATE datetime not null,
+	LAST_LOGIN_DATE datetime not null,
+	constraint CYCLE_MEMBER_EMAIL_uindex
+		unique (EMAIL)
 );
 
 create table dairy_record
