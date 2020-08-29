@@ -1,12 +1,8 @@
 package com.friendship41.cycledairyserver.controller;
 
-import com.friendship41.cycledairyserver.common.AES256Util;
 import com.friendship41.cycledairyserver.data.database.CycleMember;
+import com.friendship41.cycledairyserver.service.AccessTokenService;
 import com.friendship41.cycledairyserver.service.CycleMemberService;
-import java.io.UnsupportedEncodingException;
-import java.security.GeneralSecurityException;
-import java.util.UUID;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,12 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/member")
 public class CycleMemberController {
   private final CycleMemberService cycleMemberService;
-  private final AES256Util aes256Util;
+  private final AccessTokenService accessTokenService;
 
   @Autowired
-  public CycleMemberController(final CycleMemberService cycleMemberService, final AES256Util aes256Util) {
+  public CycleMemberController(final CycleMemberService cycleMemberService, AccessTokenService accessTokenService) {
     this.cycleMemberService = cycleMemberService;
-    this.aes256Util = aes256Util;
+    this.accessTokenService = accessTokenService;
   }
 
   @PostMapping("/register")
@@ -35,16 +31,15 @@ public class CycleMemberController {
   }
 
   @PostMapping("/login")
-  public Object login(@RequestBody CycleMember cycleMember, HttpSession session)
-      throws GeneralSecurityException, UnsupportedEncodingException {
+  public Object login(@RequestBody CycleMember cycleMember) {
     CycleMember loginedMember = cycleMemberService.login(cycleMember);
     if (loginedMember == null) {
       return "{\"result\":\"500\"}";
     }
-    session.setAttribute("memberId", cycleMember.getMemberId());
-    String accessToken = UUID.randomUUID().toString();
-    session.setAttribute("access_token", accessToken);
-    accessToken = aes256Util.encrypt(accessToken);
+    String accessToken = accessTokenService.insertToken(loginedMember.getMemberId());
+    if (accessToken == null) {
+      return "{\"result\":\"400\", \"message\":\"tokenError\"}";
+    }
     return "{\"result\":\"200\",\"access_token\":\""+accessToken+"\"}";
   }
 

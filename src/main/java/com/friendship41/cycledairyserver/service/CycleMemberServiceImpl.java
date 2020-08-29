@@ -37,7 +37,7 @@ public class CycleMemberServiceImpl implements CycleMemberService {
       return null;
     }
 
-    dbmember.get().setPassword(null);
-    return dbmember.get();
+    cycleMember.setPassword(null);
+    return cycleMember;
   }
 }

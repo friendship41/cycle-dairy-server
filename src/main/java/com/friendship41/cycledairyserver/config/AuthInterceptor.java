@@ -1,6 +1,7 @@
 package com.friendship41.cycledairyserver.config;
 
 import com.friendship41.cycledairyserver.common.AES256Util;
+import com.friendship41.cycledairyserver.service.AccessTokenService;
 import java.io.IOException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.servlet.http.HttpServletRequest;
@@ -14,10 +15,12 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class AuthInterceptor extends HandlerInterceptorAdapter {
   private final AES256Util aes256Util;
+  private final AccessTokenService accessTokenService;
 
   @Autowired
-  public AuthInterceptor(AES256Util aes256Util) {
+  public AuthInterceptor(AES256Util aes256Util, AccessTokenService accessTokenService) {
     this.aes256Util = aes256Util;
+    this.accessTokenService = accessTokenService;
   }
 
   @Override
@@ -33,7 +36,8 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
     String originCode;
     try {
       originCode = aes256Util.decrypt(accessToken);
-      if (originCode.equals(request.getSession().getAttribute("access_token"))) {
+      String[] code = originCode.split("!@#");
+      if (accessTokenService.checkToken(code[0], code[1])) {
         return true;
       }
     } catch (IllegalBlockSizeException ignored) {}

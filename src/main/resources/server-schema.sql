@@ -1,3 +1,12 @@
+create table cycle_dairy_db.access_token_store
+(
+	token_id varchar(40) not null,
+	access_token varchar(100) not null,
+	member_id varchar(100) not null,
+	constraint access_token_store_pk
+		primary key (token_id)
+);
+
 create table cycle_dairy_db.cycle_member
 (
 	MEMBER_ID varchar(100) not null
