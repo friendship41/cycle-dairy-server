@@ -36,10 +36,9 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
       if (originCode.equals(request.getSession().getAttribute("access_token"))) {
         return true;
       }
-    } catch (IllegalBlockSizeException ignored) {
-      this.responseAccessTokenError(response);
-    }
+    } catch (IllegalBlockSizeException ignored) {}
 
+    this.responseAccessTokenError(response);
     log.warn("access_token is not valid");
     log.info("=====================end=====================");
     return false;
