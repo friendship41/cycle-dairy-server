@@ -39,13 +39,13 @@ public class CycleMemberController {
       throws GeneralSecurityException, UnsupportedEncodingException {
     CycleMember loginedMember = cycleMemberService.login(cycleMember);
     if (loginedMember == null) {
-      return "{\"result\":\"fail\"}";
+      return "{\"result\":\"500\"}";
     }
     session.setAttribute("memberId", cycleMember.getMemberId());
     String accessToken = UUID.randomUUID().toString();
     session.setAttribute("access_token", accessToken);
     accessToken = aes256Util.encrypt(accessToken);
-    return "{\"result\":\"success\",\"access_token\":\""+accessToken+"\"}";
+    return "{\"result\":\"200\",\"access_token\":\""+accessToken+"\"}";
   }
 
   @GetMapping("/checkToken")
