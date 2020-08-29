@@ -45,6 +45,6 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
     return false;
   }
   private void responseAccessTokenError(HttpServletResponse response) throws IOException {
-    response.getWriter().write("{\"message\":\"tokenError\"}");
+    response.getWriter().write("{\"result\":\"400\", \"message\":\"tokenError\"}");
   }
 }
