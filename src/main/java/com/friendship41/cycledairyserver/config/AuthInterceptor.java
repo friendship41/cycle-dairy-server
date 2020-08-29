@@ -23,28 +23,28 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
   @Override
   public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler)
       throws Exception {
-    String loginCode = request.getHeader("loginCode");
-    if (loginCode == null) {
-      responseLoginError(response);
-      log.warn("loginCode is missing");
+    String accessToken = request.getHeader("access_token");
+    if (accessToken == null) {
+      this.responseAccessTokenError(response);
+      log.warn("access_token is missing");
       log.info("=====================end=====================");
       return false;
     }
     String originCode;
     try {
-      originCode = aes256Util.decrypt(loginCode);
-      if (originCode.equals(request.getSession().getAttribute("loginCode"))) {
+      originCode = aes256Util.decrypt(accessToken);
+      if (originCode.equals(request.getSession().getAttribute("access_token"))) {
         return true;
       }
     } catch (IllegalBlockSizeException ignored) {
-      this.responseLoginError(response);
+      this.responseAccessTokenError(response);
     }
 
-    log.warn("loginCode is not valid");
+    log.warn("access_token is not valid");
     log.info("=====================end=====================");
     return false;
   }
-  private void responseLoginError(HttpServletResponse response) throws IOException {
-    response.getWriter().write("{\"message\":\"loginSessionError\"}");
+  private void responseAccessTokenError(HttpServletResponse response) throws IOException {
+    response.getWriter().write("{\"message\":\"tokenError\"}");
   }
 }

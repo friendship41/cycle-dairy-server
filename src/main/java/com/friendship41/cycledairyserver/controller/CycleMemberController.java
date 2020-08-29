@@ -41,9 +41,9 @@ public class CycleMemberController {
       return "{\"result\":\"fail\"}";
     }
     session.setAttribute("memberId", cycleMember.getMemberId());
-    String code = UUID.randomUUID().toString();
-    session.setAttribute("loginCode", code);
-    code = aes256Util.encrypt(code);
-    return "{\"result\":\"success\",\"loginCode\":\""+code+"\"}";
+    String accessToken = UUID.randomUUID().toString();
+    session.setAttribute("access_token", accessToken);
+    accessToken = aes256Util.encrypt(accessToken);
+    return "{\"result\":\"success\",\"access_token\":\""+accessToken+"\"}";
   }
 }
